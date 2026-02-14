@@ -1,0 +1,46 @@
+# Unreal Engine 生成文件
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.obj
+
+# 编辑器/IDE 临时文件
+.vs/
+.idea/
+.vscode/
+*.sln
+*.suo
+*.user
+*.tmp
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+*.xcodeproj
+*.xcworkspace
+
+# 插件中间文件（如果项目使用了插件）
+Plugins/*/Intermediate/
+Plugins/*/Binaries/
+
+# 日志和崩溃报告
+*.log
+CrashReportClient/
+Saved/Logs/
+
+# 打包输出（自定义目录）
+PackageTest/
+
+# 自定义目录（如果你确实在项目根目录下使用 hooks/ 和 lfs/）
+hooks/
+lfs/
+
+# 操作系统特定文件
+.DS_Store
+Thumbs.db
