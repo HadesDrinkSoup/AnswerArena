@@ -7,6 +7,7 @@
 #include "Player/AAPlayerState.h"
 #include "Player/AAPlayerController.h"
 #include "UI/HUD/AAHUD.h"
+#include "UI/WidgetController/CalculatorWidgetController.h"
 
 AAACharacter::AAACharacter()
 {
@@ -17,6 +18,7 @@ void AAACharacter::BeginPlay()
 	Super::BeginPlay();
 	GetCalculator();
 	InitAbilityActorInfo();
+	CalculatorWidgetController =  NewObject<UCalculatorWidgetController>(this);
 }
 
 UCalculator* AAACharacter::GetCalculator()

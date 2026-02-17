@@ -13,4 +13,6 @@ UCLASS()
 class ANSWERARENA_API UOverlayWidgetController : public UAAWidgetController
 {
 	GENERATED_BODY()
+private:
+	
 };

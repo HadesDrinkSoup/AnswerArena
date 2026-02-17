@@ -7,11 +7,25 @@
 UENUM(BlueprintType)
 enum class EOperatorType : uint8
 {
-	Add,
-	Sub,
-	Mul,
-	Div,
-	None
+	Add UMETA(DisplayName = "加法"),
+	Sub UMETA(DisplayName = "减法"),
+	Mul UMETA(DisplayName = "乘法"),
+	Div UMETA(DisplayName = "除法"),
+	None UMETA(DisplayName = "无")
+};
+
+UENUM(BlueprintType)
+enum class EEquationNumType : uint8
+{
+	Equation_TwoNumbers UMETA(DisplayName = "两位数运算"),
+	Equation_ThreeNumbers UMETA(DisplayName = "三位数运算")
+};
+
+UENUM(BlueprintType)
+enum class EEquationDigitType : uint8
+{
+	Equation_OneDigit UMETA(DisplayName = "一位数"),
+	Equation_TwoDigit UMETA(DisplayName = "两位数")
 };
 
 USTRUCT(BlueprintType)
@@ -48,26 +62,13 @@ struct FCalculatorData
 	int32 Remainder = 0;
 };
 
-UENUM(BlueprintType)
-enum class EEquationNumType : uint8
-{
-	Equation_TwoNumbers,
-	Equation_ThreeNumbers
-};
-
-UENUM(BlueprintType)
-enum class EEquationDigitType : uint8
-{
-	Equation_OneDigit,
-	Equation_TwoDigit,
-};
-
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, BlueprintType)
 class ANSWERARENA_API UCalculator : public UObject
 {
 	GENERATED_BODY()
 	
 public:
+	
 	UFUNCTION(BlueprintCallable, Category = "Calculator")
 	FCalculatorData GetCalculatorData() const;
 	
@@ -114,7 +115,7 @@ protected:
 	// 是否允许除法有余数
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation")
 	bool bAllowRemainder = false;
-	
+
 private:
 	// 生成指定位数的随机整数
 	static int32 GenerateRandomNumber(const EEquationDigitType& EquationDigitType);

@@ -6,6 +6,7 @@
 #include "Character/AACharacterBase.h"
 #include "AACharacter.generated.h"
 
+class UCalculatorWidgetController;
 class UCalculator;
 
 UCLASS()
@@ -27,6 +28,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Calculator")
 	TObjectPtr<UCalculator> Calculator;
 	
+	UPROPERTY()
+	TObjectPtr<UCalculatorWidgetController> CalculatorWidgetController ;
 private:
 	void CreateCalculatorInstance();
 	void InitAbilityActorInfo() const;

@@ -54,18 +54,12 @@ FString UCalculator::GetCurrentAnswerString() const
     {
         return FString::Printf(TEXT("%d...%d"), CalculatorData.Quotient, CalculatorData.Remainder);
     }
-    else
+    // 检查是否为整数
+    if (FMath::IsNearlyEqual(CalculatorData.Answer, FMath::RoundToFloat(CalculatorData.Answer), 0.0001f))
     {
-        // 检查是否为整数
-        if (FMath::IsNearlyEqual(CalculatorData.Answer, FMath::RoundToFloat(CalculatorData.Answer), 0.0001f))
-        {
-            return FString::FromInt(FMath::RoundToInt(CalculatorData.Answer));
-        }
-        else
-        {
-            return FString::SanitizeFloat(CalculatorData.Answer);
-        }
+        return FString::FromInt(FMath::RoundToInt(CalculatorData.Answer));
     }
+    return FString::SanitizeFloat(CalculatorData.Answer);
 }
 
 FString UCalculator::GetOperatorSymbol(const EOperatorType OperatorType)

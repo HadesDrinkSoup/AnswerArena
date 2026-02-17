@@ -10,7 +10,7 @@ struct FCalculatorData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCalculatorChangedDelegate, const FCalculatorData&, CalculatorData);
 
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class ANSWERARENA_API UCalculatorWidgetController : public UAAWidgetController
 {
 	GENERATED_BODY()
@@ -20,12 +20,19 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Calculator")
 	void OnGenerateEquationClicked();
-
 	
+	UFUNCTION(BlueprintCallable, Category = "Calculator")
+	FString GetEquationDisplayString() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "Calculator")
+	FString GetAnswerDisplayString() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "Calculator")
+	void BroadcastCalculatorData() const;
 private:
-	UPROPERTY()
+	UPROPERTY(BlueprintType, Category="Calculator")
 	TObjectPtr<UCalculator> Calculator;
 	
+	UFUNCTION(BlueprintCallable, Category = "Calculator")
 	void GetCalculatorFromCharacter();
-	void BroadcastLatestCalculatorData() const;
 };

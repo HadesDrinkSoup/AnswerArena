@@ -14,7 +14,19 @@ void UCalculatorWidgetController::OnGenerateEquationClicked()
 		if (!Calculator) return;
 	}
 	Calculator->GenerateEquation();
-	BroadcastLatestCalculatorData();
+	
+}
+
+FString UCalculatorWidgetController::GetEquationDisplayString() const
+{
+	if (!Calculator) return TEXT("");
+	return Calculator->GetCurrentEquation();
+}
+
+FString UCalculatorWidgetController::GetAnswerDisplayString() const
+{
+	if (!Calculator) return TEXT("");
+	return Calculator->GetCurrentAnswerString();
 }
 
 void UCalculatorWidgetController::GetCalculatorFromCharacter()
@@ -27,9 +39,9 @@ void UCalculatorWidgetController::GetCalculatorFromCharacter()
 	check(Calculator);
 }
 
-void UCalculatorWidgetController::BroadcastLatestCalculatorData() const
+void UCalculatorWidgetController::BroadcastCalculatorData() const
 {
 	if (!Calculator) return;
-	const FCalculatorData& LatestData = Calculator->GetCalculatorData();
-	OnCalculatorChanged.Broadcast(LatestData);
+	const FCalculatorData& CalculatorData = Calculator->GetCalculatorData();
+	OnCalculatorChanged.Broadcast(CalculatorData);
 }
