@@ -35,6 +35,7 @@ void AAACharacter::CreateCalculatorInstance()
 	if (CalculatorClass)
 	{
 		Calculator = NewObject<UCalculator>(this, CalculatorClass);
+		UE_LOG(LogTemp, Display, TEXT("Calculator has been spawned"));
 	}
 	else
 	{

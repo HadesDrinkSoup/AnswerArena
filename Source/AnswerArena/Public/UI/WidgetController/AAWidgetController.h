@@ -26,7 +26,7 @@ struct FWidgetControllerParams
 };
 
 
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class ANSWERARENA_API UAAWidgetController : public UObject
 {
 	GENERATED_BODY()

@@ -10,11 +10,9 @@ void UCalculatorWidgetController::OnGenerateEquationClicked()
 {
 	if (!Calculator)
 	{
-		GetCalculatorFromCharacter();
-		if (!Calculator) return;
+		Calculator = GetCalculatorFromCharacter();
 	}
 	Calculator->GenerateEquation();
-	
 }
 
 FString UCalculatorWidgetController::GetEquationDisplayString() const
@@ -29,14 +27,15 @@ FString UCalculatorWidgetController::GetAnswerDisplayString() const
 	return Calculator->GetCurrentAnswerString();
 }
 
-void UCalculatorWidgetController::GetCalculatorFromCharacter()
+UCalculator* UCalculatorWidgetController::GetCalculatorFromCharacter() const
 {
-	if (!PlayerController) return;
-
-	AAACharacter* AACharacter = Cast<AAACharacter>(PlayerController->GetCharacter());
+	check(PlayerController);
+	APawn* Pawn = PlayerController->GetCharacter();
+	AAACharacter* AACharacter = Cast<AAACharacter>(Pawn);
 	check(AACharacter);
-	Calculator = AACharacter->GetCalculator();
-	check(Calculator);
+	UCalculator* FoundCalculator = AACharacter->GetCalculator();
+	check(FoundCalculator);
+	return FoundCalculator;
 }
 
 void UCalculatorWidgetController::BroadcastCalculatorData() const
