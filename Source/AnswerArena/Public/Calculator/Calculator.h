@@ -76,17 +76,7 @@ public:
 	void GenerateEquation();
 	
 	UFUNCTION(BlueprintPure, Category = "Calculator")
-	FString GetCurrentEquation() const;
-	
-	UFUNCTION(BlueprintPure, Category = "Calculator")
 	float GetCurrentAnswer() const;
-	
-	// 获取带余数格式的答案字符串（例如："5...2" 表示商5余2）
-	UFUNCTION(BlueprintPure, Category = "Calculator")
-	FString GetCurrentAnswerString() const;
-	
-	UFUNCTION(BlueprintPure, Category = "Calculator")
-	static FString GetOperatorSymbol(EOperatorType OperatorType);
 	
 protected:
 	FCalculatorData CalculatorData;
@@ -143,9 +133,6 @@ private:
 	
 	// 生成三个数的算式
 	void GenerateThreeNumbersEquation(const EOperatorType& Operator1, const EOperatorType& Operator2, const EEquationDigitType& DigitType);
-	
-	// 生成算式字符串
-	void GenerateEquationString();
 	
 	// 获取指定位数类型的最小值
 	static int32 GetMinValueForDigitType(const EEquationDigitType& DigitType);

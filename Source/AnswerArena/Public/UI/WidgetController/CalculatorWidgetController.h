@@ -22,12 +22,6 @@ public:
 	void OnGenerateEquationClicked();
 	
 	UFUNCTION(BlueprintCallable, Category = "Calculator")
-	FString GetEquationDisplayString() const;
-	
-	UFUNCTION(BlueprintCallable, Category = "Calculator")
-	FString GetAnswerDisplayString() const;
-	
-	UFUNCTION(BlueprintCallable, Category = "Calculator")
 	void BroadcastCalculatorData() const;
 
 private:

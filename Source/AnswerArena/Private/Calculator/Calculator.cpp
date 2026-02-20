@@ -33,54 +33,11 @@ void UCalculator::GenerateEquation()
             break;
         }
     }
-    
-    // 生成方程字符串
-    GenerateEquationString();
-}
-
-FString UCalculator::GetCurrentEquation() const
-{
-    return CurrentEquation;
 }
 
 float UCalculator::GetCurrentAnswer() const
 {
     return CalculatorData.Answer;
-}
-
-FString UCalculator::GetCurrentAnswerString() const
-{
-    if (CalculatorData.bHasRemainder)
-    {
-        return FString::Printf(TEXT("%d...%d"), CalculatorData.Quotient, CalculatorData.Remainder);
-    }
-    // 检查是否为整数
-    if (FMath::IsNearlyEqual(CalculatorData.Answer, FMath::RoundToFloat(CalculatorData.Answer), 0.0001f))
-    {
-        return FString::FromInt(FMath::RoundToInt(CalculatorData.Answer));
-    }
-    return FString::SanitizeFloat(CalculatorData.Answer);
-}
-
-FString UCalculator::GetOperatorSymbol(const EOperatorType OperatorType)
-{
-    if (OperatorType == EOperatorType::Add)
-    {
-        return "+";
-    }
-    if (OperatorType == EOperatorType::Sub)
-    {
-        return "-";
-    }
-    if (OperatorType == EOperatorType::Mul)
-    {
-        return "×";
-    }
-    if (OperatorType == EOperatorType::Div)
-    {
-        return "÷";
-    }
-    return "";
 }
 
 int32 UCalculator::GenerateRandomNumber(const EEquationDigitType& EquationDigitType)
@@ -182,6 +139,7 @@ void UCalculator::GenerateTwoNumbersEquation(const EOperatorType& OperatorType, 
     if (OperatorType == EOperatorType::Add)
     {
         CalculatorData.Answer = CalculatorData.Num1 + CalculatorData.Num2;
+        UE_LOG(LogTemp, Log, TEXT("Calculator: Num1 [%d]   Operator [%hhd]   Num2 [%d]   Answer [%f]"), CalculatorData.Num1, CalculatorData.Operator1, CalculatorData.Num2, CalculatorData.Answer);
     }
     
     if (OperatorType == EOperatorType::Sub)
@@ -192,30 +150,26 @@ void UCalculator::GenerateTwoNumbersEquation(const EOperatorType& OperatorType, 
         }
         else
         {
-            if (CalculatorData.Num1 < CalculatorData.Num2)
-            {
-                const int32 Temp = CalculatorData.Num1;
-                CalculatorData.Num1 = CalculatorData.Num2;
-                CalculatorData.Num2 = Temp;
-            }
+            if (CalculatorData.Num1 < CalculatorData.Num2) Swap(CalculatorData.Num1, CalculatorData.Num2);
             CalculatorData.Answer = CalculatorData.Num1 - CalculatorData.Num2;
         }
+        UE_LOG(LogTemp, Log, TEXT("Calculator: Num1 [%d]   Operator [%hhd]   Num2 [%d]   Answer [%f]"), CalculatorData.Num1, CalculatorData.Operator1, CalculatorData.Num2, CalculatorData.Answer);
     }
     
     if (OperatorType == EOperatorType::Mul)
     {
         CalculatorData.Answer = CalculatorData.Num1 * CalculatorData.Num2;
+        UE_LOG(LogTemp, Log, TEXT("Calculator: Num1 [%d]   Operator [%hhd]   Num2 [%d]   Answer [%f]"), CalculatorData.Num1, CalculatorData.Operator1, CalculatorData.Num2, CalculatorData.Answer);
     }
     
     if (OperatorType == EOperatorType::Div)
     {
-        while (CalculatorData.Num2 == 0)
-        {
-            CalculatorData.Num2 = GenerateRandomNumber(DigitType);
-        }
+        CalculatorData.Num2 = FMath::RandRange(1, 99);
+        if (CalculatorData.Num1 < CalculatorData.Num2) Swap(CalculatorData.Num1, CalculatorData.Num2);
         
         if (bAllowRemainder)
         {
+            
             // 允许余数：直接计算除法的商和余数
             CalculatorData.Quotient = CalculatorData.Num1 / CalculatorData.Num2;
             CalculatorData.Remainder = CalculatorData.Num1 % CalculatorData.Num2;
@@ -229,23 +183,18 @@ void UCalculator::GenerateTwoNumbersEquation(const EOperatorType& OperatorType, 
             {
                 CalculatorData.Answer += static_cast<float>(CalculatorData.Remainder) / CalculatorData.Num2;
             }
+            UE_LOG(LogTemp, Log, TEXT("Calculator: Num1 [%d]   Operator [%hhd]   Num2 [%d]   Answer [%f]   Remainder [%d]"), CalculatorData.Num1, CalculatorData.Operator1, CalculatorData.Num2, CalculatorData.Answer, CalculatorData.Remainder);
         }
         else
         {
             // 不允许余数（整除）：需要确保 Num1 是 Num2 的倍数
             // 重新生成除数，确保不为0
-            CalculatorData.Num2 = GenerateRandomNumber(DigitType);
-            while (CalculatorData.Num2 == 0)
-            {
-                CalculatorData.Num2 = GenerateRandomNumber(DigitType);
-            }
             
             // 获取位数范围
-            const int32 MinValue = GetMinValueForDigitType(DigitType);
             const int32 MaxValue = GetMaxValueForDigitType(DigitType);
             
             // 生成一个倍数，确保 Num1 在合理范围内
-            int32 Multiplier;
+            int32 Multiplier = 0;
             if (DigitType == EEquationDigitType::Equation_OneDigit)
             {
                 // 对于一位数，确保 Num1 也是一位数
@@ -253,27 +202,19 @@ void UCalculator::GenerateTwoNumbersEquation(const EOperatorType& OperatorType, 
                 if (MaxMultiplier < 1) MaxMultiplier = 1;
                 Multiplier = FMath::RandRange(1, MaxMultiplier);
             }
-            else if (DigitType == EEquationDigitType::Equation_TwoDigit)
+            if (DigitType == EEquationDigitType::Equation_TwoDigit)
             {
-                // 对于两位数，确保 Num1 也是两位数
+                const int32 MinValue = GetMinValueForDigitType(DigitType);
+                // 对于两位数，确保 Num1 是两位数
                 int32 MinMultiplier = FMath::CeilToInt(static_cast<float>(MinValue) / CalculatorData.Num2);
                 int32 MaxMultiplier = MaxValue / CalculatorData.Num2;
                 if (MinMultiplier < 1) MinMultiplier = 1;
-                if (MaxMultiplier < MinMultiplier) MaxMultiplier = MinMultiplier;
+                if (MaxMultiplier < MinMultiplier) Swap(MinMultiplier, MaxMultiplier);
                 Multiplier = FMath::RandRange(MinMultiplier, MaxMultiplier);
             }
-            else // Equation_ThreeDigit
-            {
-                // 对于三位数，确保 Num1 也是三位数
-                int32 MinMultiplier = FMath::CeilToInt(static_cast<float>(MinValue) / CalculatorData.Num2);
-                int32 MaxMultiplier = MaxValue / CalculatorData.Num2;
-                if (MinMultiplier < 1) MinMultiplier = 1;
-                if (MaxMultiplier < MinMultiplier) MaxMultiplier = MinMultiplier;
-                Multiplier = FMath::RandRange(MinMultiplier, MaxMultiplier);
-            }
-            
             CalculatorData.Num1 = CalculatorData.Num2 * Multiplier;
             CalculatorData.Answer = static_cast<float>(Multiplier);
+            UE_LOG(LogTemp, Log, TEXT("Calculator: Num1 [%d]   Operator [%hhd]   Num2 [%d]   Answer [%f]"), CalculatorData.Num1, CalculatorData.Operator1, CalculatorData.Num2, CalculatorData.Answer);
         }
     }
 }
@@ -477,26 +418,6 @@ void UCalculator::GenerateThreeNumbersEquation(const EOperatorType& Operator1, c
                 CalculatorData.Answer = CalculatorData.Num1 / SecondResult;
             }
         }
-    }
-}
-
-void UCalculator::GenerateEquationString()
-{
-    if (m_EquationNumType == EEquationNumType::Equation_TwoNumbers)
-    {
-        CurrentEquation = FString::Printf(TEXT("%d %s %d"),
-            CalculatorData.Num1,
-            *GetOperatorSymbol(CalculatorData.Operator1),
-            CalculatorData.Num2);
-    }
-    else
-    {
-        CurrentEquation = FString::Printf(TEXT("%d %s %d %s %d"),
-            CalculatorData.Num1,
-            *GetOperatorSymbol(CalculatorData.Operator1),
-            CalculatorData.Num2,
-            *GetOperatorSymbol(CalculatorData.Operator2),
-            CalculatorData.Num3);
     }
 }
 

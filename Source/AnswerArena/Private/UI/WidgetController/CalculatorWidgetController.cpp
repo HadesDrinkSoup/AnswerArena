@@ -15,18 +15,6 @@ void UCalculatorWidgetController::OnGenerateEquationClicked()
 	Calculator->GenerateEquation();
 }
 
-FString UCalculatorWidgetController::GetEquationDisplayString() const
-{
-	if (!Calculator) return TEXT("");
-	return Calculator->GetCurrentEquation();
-}
-
-FString UCalculatorWidgetController::GetAnswerDisplayString() const
-{
-	if (!Calculator) return TEXT("");
-	return Calculator->GetCurrentAnswerString();
-}
-
 UCalculator* UCalculatorWidgetController::GetCalculatorFromCharacter() const
 {
 	check(PlayerController);
