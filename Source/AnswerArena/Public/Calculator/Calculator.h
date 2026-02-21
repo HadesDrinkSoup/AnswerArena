@@ -79,28 +79,28 @@ protected:
 	FCalculatorData CalculatorData;
 	FString CurrentEquation;
 	
-	// 计算的数字个数
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "c")
+	// 计算的数字个数（作为核心条件）
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation", meta=(DisplayName="运算数字个数"))
 	EEquationNumType m_EquationNumType = EEquationNumType::Equation_TwoNumbers;
 
-	// 计算位数
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation")
+	// 计算位数（始终可见）
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation", meta=(DisplayName="运算数字位数"))
 	EEquationDigitType m_EquationDigitType = EEquationDigitType::Equation_OneDigit;
 	
-	// 运算符类型
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation")
+	// 运算符类型：仅当"两个数运算"时可编辑
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation", meta=(DisplayName="运算符类型", EditCondition="m_EquationNumType == EEquationNumType::Equation_TwoNumbers", EditConditionHides))
 	EOperatorType m_OperatorType = EOperatorType::Add;
 	
-	// 是否生成混合运算
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation")
+	// 是否生成随机运算：仅当"两个数运算"时可编辑
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation", meta=(DisplayName="是否生成随机运算符", EditCondition="m_EquationNumType == EEquationNumType::Equation_TwoNumbers", EditConditionHides))
 	bool bGenerateMixedOperator = false;
 	
-	// 是否允许结果为负数（仅对减法有效）
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation")
+	// 是否允许结果为负数：仅当"两个数运算"时可编辑
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation", meta=(DisplayName="允许减法结果为负数", EditCondition="m_EquationNumType == EEquationNumType::Equation_TwoNumbers", EditConditionHides))
 	bool bAllowNegativeResult = false;
 	
-	// 是否允许除法有余数
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation")
+	// 是否允许除法有余数（始终可见，因为三个数运算也可能包含除法）
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation", meta=(DisplayName="允许除法有余数"))
 	bool bAllowRemainder = false;
 
 private:
@@ -109,6 +109,15 @@ private:
 	
 	// 获取随机运算符类型
 	static EOperatorType GetRandomOperatorType();
+
+	// 判断是否是加减运算符
+	static bool IsAddSubOperator(EOperatorType OpType);
+
+	// 判断是否是乘除运算符
+	static bool IsMulDivOperator(EOperatorType OpType);
+
+	// 按类型获取随机运算符（true=加减，false=乘除）
+	static EOperatorType GetRandomOperatorByType(bool bWantAddSub);
 	
 	// 生成加法算式
 	void GenerateAddition(const EEquationNumType& EquationNumType, const EEquationDigitType& DigitType);
