@@ -80,7 +80,7 @@ protected:
 	FString CurrentEquation;
 	
 	// 计算的数字个数
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Equation")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "c")
 	EEquationNumType m_EquationNumType = EEquationNumType::Equation_TwoNumbers;
 
 	// 计算位数

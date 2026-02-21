@@ -27,10 +27,8 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Calculator")
 	TObjectPtr<UCalculator> Calculator;
-	
-	UPROPERTY()
-	TObjectPtr<UCalculatorWidgetController> CalculatorWidgetController ;
+
 private:
 	void CreateCalculatorInstance();
-	void InitAbilityActorInfo() const;
+	void InitCharacterInfo();
 };

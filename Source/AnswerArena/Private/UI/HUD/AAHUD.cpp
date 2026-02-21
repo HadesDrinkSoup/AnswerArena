@@ -15,7 +15,6 @@ void AAAHUD::InitOverlay(APlayerController* PC, APlayerState* PS)
 	const FWidgetControllerParams OverlayWidgetControllerParams(PC, PS);
 	OverlayWidgetController = GetOverlayWidgetController(OverlayWidgetControllerParams);
 	OverlayWidget->SetWidgetController(OverlayWidgetController);
-	OverlayWidgetController->BroadcastInitialValues();
 	OverlayUserWidget->AddToViewport();
 }
 
@@ -25,7 +24,6 @@ UOverlayWidgetController* AAAHUD::GetOverlayWidgetController(const FWidgetContro
 	{
 		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
 		OverlayWidgetController->SetWidgetControllerParams(WidgetControllerParams);
-		OverlayWidgetController->BindCallBacks();
 		return OverlayWidgetController;
 	}
 	return OverlayWidgetController;
@@ -37,7 +35,6 @@ UCalculatorWidgetController* AAAHUD::GetCalculatorWidgetController(const FWidget
 	{
 		CalculatorWidgetController = NewObject<UCalculatorWidgetController>(this, CalculatorWidgetControllerClass);
 		CalculatorWidgetController->SetWidgetControllerParams(WidgetControllerParams);
-		CalculatorWidgetController->BindCallBacks();
 		return CalculatorWidgetController;
 	}
 	return CalculatorWidgetController;

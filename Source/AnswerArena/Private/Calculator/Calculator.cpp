@@ -2,6 +2,8 @@
 
 #include "Calculator/Calculator.h"
 
+#include "UI/WidgetController/CalculatorWidgetController.h"
+
 FCalculatorData UCalculator::GetCalculatorData() const
 {
     return CalculatorData;
@@ -227,7 +229,7 @@ void UCalculator::GenerateThreeNumbersEquation(const EOperatorType& Operator1, c
     const int32 MinDigit = GetMinValueForDigitType(DigitType);
     const int32 MaxDigit = GetMaxValueForDigitType(DigitType);
 
-    // 简化处理：由于三位数运算复杂，我们简化逻辑，先生成数字再计算结果
+    // 简化处理：由于三位数运算复杂，简化逻辑，先生成数字再计算结果
     CalculatorData.Num1 = FMath::RandRange(MinDigit, MaxDigit);
     CalculatorData.Num2 = FMath::RandRange(MinDigit, MaxDigit);
     CalculatorData.Num3 = FMath::RandRange(MinDigit, MaxDigit);
@@ -237,12 +239,12 @@ void UCalculator::GenerateThreeNumbersEquation(const EOperatorType& Operator1, c
         (Operator2 == EOperatorType::Add || Operator2 == EOperatorType::Sub))
     {
         // 加减混合，左结合计算
-        float FirstResult;
+        float FirstResult = 0;
         if (Operator1 == EOperatorType::Add)
         {
             FirstResult = CalculatorData.Num1 + CalculatorData.Num2;
         }
-        else
+        else if (Operator1 == EOperatorType::Sub)
         {
             FirstResult = CalculatorData.Num1 - CalculatorData.Num2;
         }
@@ -251,21 +253,23 @@ void UCalculator::GenerateThreeNumbersEquation(const EOperatorType& Operator1, c
         {
             CalculatorData.Answer = FirstResult + CalculatorData.Num3;
         }
-        else
+        else if (Operator2 == EOperatorType::Sub)
         {
             CalculatorData.Answer = FirstResult - CalculatorData.Num3;
         }
+        UE_LOG(LogTemp, Log, TEXT("Calculator: Num1 [%d]   Operator1 [%hhd]   Num2 [%d]   Operator2 [%hhd]   Num3 [%d]   Answer [%f]"), 
+            CalculatorData.Num1, CalculatorData.Operator1, CalculatorData.Num2, CalculatorData.Operator2, CalculatorData.Num2, CalculatorData.Answer);
     }
     else if ((Operator1 == EOperatorType::Mul || Operator1 == EOperatorType::Div) &&
              (Operator2 == EOperatorType::Mul || Operator2 == EOperatorType::Div))
     {
         // 乘除混合，左结合计算
-        float FirstResult;
+        float FirstResult = 0;
         if (Operator1 == EOperatorType::Mul)
         {
             FirstResult = CalculatorData.Num1 * CalculatorData.Num2;
         }
-        else
+        else if (Operator1 == EOperatorType::Div)   
         {
             if (CalculatorData.Num2 == 0) CalculatorData.Num2 = 1;
             if (bAllowRemainder)
@@ -290,14 +294,14 @@ void UCalculator::GenerateThreeNumbersEquation(const EOperatorType& Operator1, c
         {
             CalculatorData.Answer = FirstResult * CalculatorData.Num3;
         }
-        else
+        else if (Operator2 == EOperatorType::Div)
         {
             if (CalculatorData.Num3 == 0) CalculatorData.Num3 = 1;
             if (bAllowRemainder)
             {
                 // 只处理最后一步的余数显示
-                int32 TempQuotient = static_cast<int32>(FirstResult) / CalculatorData.Num3;
-                int32 TempRemainder = static_cast<int32>(FirstResult) % CalculatorData.Num3;
+                const int32 TempQuotient = static_cast<int32>(FirstResult) / CalculatorData.Num3;
+                const int32 TempRemainder = static_cast<int32>(FirstResult) % CalculatorData.Num3;
                 CalculatorData.bHasRemainder = (TempRemainder != 0);
                 CalculatorData.Quotient = TempQuotient;
                 CalculatorData.Remainder = TempRemainder;
@@ -308,6 +312,8 @@ void UCalculator::GenerateThreeNumbersEquation(const EOperatorType& Operator1, c
                 CalculatorData.Answer = FirstResult / CalculatorData.Num3;
             }
         }
+        UE_LOG(LogTemp, Log, TEXT("Calculator: Num1 [%d]   Operator1 [%hhd]   Num2 [%d]   Operator2 [%hhd]   Num3 [%d]   Answer [%f]   Remainder [%d]"), 
+                   CalculatorData.Num1, CalculatorData.Operator1, CalculatorData.Num2, CalculatorData.Operator2, CalculatorData.Num2, CalculatorData.Answer, CalculatorData.Remainder);
     }
     else
     {
@@ -316,12 +322,12 @@ void UCalculator::GenerateThreeNumbersEquation(const EOperatorType& Operator1, c
             (Operator2 == EOperatorType::Add || Operator2 == EOperatorType::Sub))
         {
             // 先计算前两个数
-            float FirstResult;
+            float FirstResult = 0;
             if (Operator1 == EOperatorType::Mul)
             {
                 FirstResult = CalculatorData.Num1 * CalculatorData.Num2;
             }
-            else
+            else if (Operator1 == EOperatorType::Div)
             {
                 if (CalculatorData.Num2 == 0) CalculatorData.Num2 = 1;
                 if (bAllowRemainder)
@@ -351,6 +357,8 @@ void UCalculator::GenerateThreeNumbersEquation(const EOperatorType& Operator1, c
             {
                 CalculatorData.Answer = FirstResult - CalculatorData.Num3;
             }
+            UE_LOG(LogTemp, Log, TEXT("Calculator: Num1 [%d]   Operator1 [%hhd]   Num2 [%d]   Operator2 [%hhd]   Num3 [%d]   Answer [%f]   Remainder [%d]"), 
+                   CalculatorData.Num1, CalculatorData.Operator1, CalculatorData.Num2, CalculatorData.Operator2, CalculatorData.Num2, CalculatorData.Answer, CalculatorData.Remainder);
         }
         else
         {
@@ -412,6 +420,8 @@ void UCalculator::GenerateThreeNumbersEquation(const EOperatorType& Operator1, c
                 if (SecondResult == 0) SecondResult = 1;
                 CalculatorData.Answer = CalculatorData.Num1 / SecondResult;
             }
+            UE_LOG(LogTemp, Log, TEXT("Calculator: Num1 [%d]   Operator1 [%hhd]   Num2 [%d]   Operator2 [%hhd]   Num3 [%d]   Answer [%f]   Remainder [%d]"), 
+                   CalculatorData.Num1, CalculatorData.Operator1, CalculatorData.Num2, CalculatorData.Operator2, CalculatorData.Num2, CalculatorData.Answer, CalculatorData.Remainder);
         }
     }
 }

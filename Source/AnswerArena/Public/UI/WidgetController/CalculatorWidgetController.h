@@ -17,17 +17,8 @@ class ANSWERARENA_API UCalculatorWidgetController : public UAAWidgetController
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Calculator")
 	FOnCalculatorChangedDelegate OnCalculatorChanged;
-	
-	UFUNCTION(BlueprintCallable, Category = "Calculator")
-	void OnGenerateEquationClicked();
-	
+
+protected:
 	UFUNCTION(BlueprintCallable, Category = "Calculator")
 	void BroadcastCalculatorData() const;
-
-private:
-	UPROPERTY()
-	TObjectPtr<UCalculator> Calculator;
-	
-	UFUNCTION(BlueprintCallable, Category = "Calculator")
-	UCalculator* GetCalculatorFromCharacter() const;
 };

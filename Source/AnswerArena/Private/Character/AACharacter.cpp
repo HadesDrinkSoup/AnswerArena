@@ -16,9 +16,7 @@ AAACharacter::AAACharacter()
 void AAACharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	GetCalculator();
-	InitAbilityActorInfo();
-	CalculatorWidgetController =  NewObject<UCalculatorWidgetController>(this);
+	InitCharacterInfo();
 }
 
 UCalculator* AAACharacter::GetCalculator()
@@ -44,7 +42,7 @@ void AAACharacter::CreateCalculatorInstance()
 	}
 }
 
-void AAACharacter::InitAbilityActorInfo() const
+void AAACharacter::InitCharacterInfo()
 {
 	AAAPlayerState* AAPlayerState = GetPlayerState<AAAPlayerState>();
 	check(AAPlayerState)
@@ -55,4 +53,5 @@ void AAACharacter::InitAbilityActorInfo() const
 			AAHUD->InitOverlay(AAPlayerController, AAPlayerState);
 		}
 	}
+	CreateCalculatorInstance();
 }

@@ -8,11 +8,3 @@ void UAAWidgetController::SetWidgetControllerParams(const FWidgetControllerParam
 	PlayerController = WCParams.PlayerController;
 	PlayerState = WCParams.PlayerState;
 }
-
-void UAAWidgetController::BroadcastInitialValues()
-{
-}
-
-void UAAWidgetController::BindCallBacks()
-{
-}

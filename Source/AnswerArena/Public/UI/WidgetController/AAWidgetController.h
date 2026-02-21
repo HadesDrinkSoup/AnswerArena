@@ -33,10 +33,6 @@ class ANSWERARENA_API UAAWidgetController : public UObject
 public:
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 	
-	UFUNCTION(BlueprintCallable)
-	virtual void BroadcastInitialValues();
-	virtual void BindCallBacks();
-	
 protected:
 	UPROPERTY(BlueprintReadOnly, Category="WidgetController")
 	TObjectPtr<APlayerController> PlayerController;
