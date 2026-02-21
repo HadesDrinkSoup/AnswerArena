@@ -17,8 +17,8 @@ enum class EOperatorType : uint8
 UENUM(BlueprintType)
 enum class EEquationNumType : uint8
 {
-	Equation_TwoNumbers UMETA(DisplayName = "两位数运算"),
-	Equation_ThreeNumbers UMETA(DisplayName = "三位数运算")
+	Equation_TwoNumbers UMETA(DisplayName = "两个数运算"),
+	Equation_ThreeNumbers UMETA(DisplayName = "三个数运算")
 };
 
 UENUM(BlueprintType)
@@ -74,9 +74,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Calculator")
 	void GenerateEquation();
-	
-	UFUNCTION(BlueprintPure, Category = "Calculator")
-	float GetCurrentAnswer() const;
 	
 protected:
 	FCalculatorData CalculatorData;

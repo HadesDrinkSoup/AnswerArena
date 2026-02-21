@@ -35,11 +35,6 @@ void UCalculator::GenerateEquation()
     }
 }
 
-float UCalculator::GetCurrentAnswer() const
-{
-    return CalculatorData.Answer;
-}
-
 int32 UCalculator::GenerateRandomNumber(const EEquationDigitType& EquationDigitType)
 {
     if (EquationDigitType == EEquationDigitType::Equation_OneDigit)
